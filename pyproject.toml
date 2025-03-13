@@ -8,6 +8,14 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+geopandas = "^1.0.1"
+rasterio = "^1.4.3"
+rasterstats = "^0.20.0"
+numpy = "^2.2.3"
+affine = "^2.4.0"
+pandas = "^2.2.3"
+rioxarray = "^0.18.2"
+xarray = "^2025.1.2"
 
 
 [tool.poetry.group.dev.dependencies]

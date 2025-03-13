@@ -134,3 +134,9 @@ dmypy.json
 
 # PyCharm
 .idea/
+
+admin_data
+hazard_data
+pop_data
+prep_data
+output_data

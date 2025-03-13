@@ -34,13 +34,6 @@ def process_flood(admin_df: gpd.geodataframe.GeoDataFrame,
     pop_raster: rasterio.io.DatasetReader) -> pd.core.frame.DataFrame:
     """
     Compute Hazard level for Flood through exposed population.
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-        pop_raster (DatasetReader): Population raster
-
-    Returns:
-        DataFrame: DataFrame containing admin codes and names, total population, population exposed and ratio of exposure.
     """
     pop_exp_raster = rasterio.open(HAZARD_INPUT_PATH['flood'])
     df = compute_hazard_population_exposure(admin_df, pop_raster, pop_exp_raster)
@@ -51,13 +44,6 @@ def process_earthquake(admin_df: gpd.geodataframe.GeoDataFrame,
     pop_raster: rasterio.io.DatasetReader) -> pd.core.frame.DataFrame:
     """
     Compute Hazard level for Earthquake through exposed population.
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-        pop_raster (DatasetReader): Population raster
-
-    Returns:
-        DataFrame: DataFrame containing admin codes and names, total population, population exposed and ratio of exposure.
     """
     pop_exp_raster = rasterio.open(HAZARD_INPUT_PATH['earthquake'])
     df = compute_hazard_population_exposure(admin_df, pop_raster, pop_exp_raster)
@@ -68,30 +54,15 @@ def process_landslide(admin_df: gpd.geodataframe.GeoDataFrame,
     pop_raster: rasterio.io.DatasetReader) -> pd.core.frame.DataFrame:
     """
     Compute Hazard level for Landslide through exposed population.
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-        pop_raster (DatasetReader): Population raster
-
-    Returns:
-        DataFrame: DataFrame containing admin codes and names, total population, population exposed and ratio of exposure.
     """    
     pop_exp_raster = rasterio.open(HAZARD_INPUT_PATH['landslide'])
     df = compute_hazard_population_exposure(admin_df, pop_raster, pop_exp_raster)
     return(df)
 
 
-
-
 def process_deforestation(admin_df: gpd.geodataframe.GeoDataFrame) -> pd.core.frame.DataFrame:
     """
     Compute Hazard level for Deforestation through ratio between treecover loss and initial treecover.
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-
-    Returns:
-        DataFrame: DataFrame containing admin codes and names, tree cover, loss and deforestation ratio
     """
     df = admin_df.drop(columns = 'geometry').copy()
     hazard_threshold = 0
@@ -116,12 +87,6 @@ def process_deforestation(admin_df: gpd.geodataframe.GeoDataFrame) -> pd.core.fr
 def process_cyclone(admin_df: gpd.geodataframe.GeoDataFrame) -> pd.core.frame.DataFrame:
     """
     Compute Hazard level for Cyclone through maximum speed for a fixed return period.
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-
-    Returns:
-        DataFrame: DataFrame containing admin codes, names and maximum wind speed
     """
     
 
@@ -136,14 +101,7 @@ def process_cyclone(admin_df: gpd.geodataframe.GeoDataFrame) -> pd.core.frame.Da
 
 def process_coastal_erosion(admin_df: gpd.geodataframe.GeoDataFrame, adm_col: str) -> pd.core.frame.DataFrame:
     """
-    Compute Hazard level for Coastal Erosion through mean erosion ratio over coastline
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-        adm_col (str): name of admin level column to be used for aggregation
-
-    Returns:
-        DataFrame: DataFrame containing admin codes, names and erosion rate
+    Compute Hazard level for Coastal Erosion through mean erosion ratio over coastline.
     """
     
     hazard_df = gpd.read_file(HAZARD_INPUT_PATH['coastal_erosion'])
@@ -163,14 +121,7 @@ def process_coastal_erosion(admin_df: gpd.geodataframe.GeoDataFrame, adm_col: st
 
 def export_dataset(df: pd.core.frame.DataFrame, hazard: str):
     """
-    Compute Hazard level for Coastal Erosion through mean erosion ratio over coastline
-
-    Args: 
-        df (DataFrame): DataFrame containing admin codes, names and hazard level
-        hazard (str): name of the hazard being computed
-
-    Returns:
-
+    Compute Hazard level for Coastal Erosion through mean erosion ratio over coastline.
     """
 
     if 'adm2_src' in  df.columns:
@@ -184,11 +135,9 @@ def export_dataset(df: pd.core.frame.DataFrame, hazard: str):
 
 def main():
 
-    #####################################
     pop_raster = rasterio.open(POPULATION_RASTER_PATH)
     admin_df = gpd.read_file(ADMIN_VECTOR_PATH)
 
-    #####################################
     adm_complete_list = ['adm0_src','adm0_name','adm1_src','adm1_name','adm2_src','adm2_name']
     adm_list = []
     for adm_col in adm_complete_list:
@@ -198,27 +147,21 @@ def main():
     adm_list.append('geometry')
     admin_df = admin_df[adm_list]
 
-    #####################################
     df = process_flood(admin_df, pop_raster)
     export_dataset(df, 'flood')
 
-    #####################################
     df = process_earthquake(admin_df, pop_raster)
     export_dataset(df, 'earthquake')
 
-    #####################################
     df = process_landslide(admin_df, pop_raster)
     export_dataset(df, 'landslide')
 
-    #####################################
     df = process_deforestation(admin_df)
     export_dataset(df, 'deforestation')
 
-    #####################################
     df = process_cyclone(admin_df)
     export_dataset(df, 'cyclone')
 
-    #####################################
     if 'adm2_src' in admin_df.columns:
         adm_col = 'adm2_src'
     elif 'adm1_src' in admin_df.columns:

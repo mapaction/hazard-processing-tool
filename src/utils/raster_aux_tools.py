@@ -10,16 +10,7 @@ import pandas as pd
 def compute_zonal_stat(data_value: np.ndarray, exp_affine: affine.Affine, 
     admin_df: gpd.geodataframe.GeoDataFrame, agg: str) -> list:
     """
-    Compute zonal statistics following a raster float and admin boundaries vector
-
-    Args:
-        data_value (np.ndarray): Array with values from a raster
-        exp_affine (affine.Affine): Grid information from the raster file
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-        agg (str): Aggregation function to be used, often 'sum' for simple aggregation
-
-    Returns:
-        list: Resulting zonal statistics from aggregate value per zone geometry
+    Compute zonal statistics for a raster and a set of polygons.
     """
         
     stats = zonal_stats(admin_df, data_value, affine=exp_affine, stats = agg)
@@ -36,15 +27,7 @@ def compute_zonal_stat(data_value: np.ndarray, exp_affine: affine.Affine,
 def compute_hazard_population_exposure(admin_df: gpd.geodataframe.GeoDataFrame, pop_raster: rasterio.io.DatasetReader, 
     pop_exp_raster: rasterio.io.DatasetReader) -> pd.core.frame.DataFrame:
     """
-    Compute the population exposed to a hazard per administrative division
-
-    Args: 
-        admin_df (GeoDataFrame): Administrative or other boundaries used for aggregation
-        pop_raster (DatasetReader): Population raster
-        pop_exp_raster (DatasetReader): Exposed population raster
-
-    Returns:
-        DataFrame: DataFrame containing admin codes and names, total population, population exposed and ratio of exposure.
+    Compute the population exposed to a hazard per administrative division.
     """
 
     df = admin_df.drop(columns = 'geometry').copy()

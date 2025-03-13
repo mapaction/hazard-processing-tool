@@ -1,10 +1,27 @@
-
+import os
+import boto3
 import geopandas as gpd
 import rasterio
 from rasterstats import zonal_stats
 import numpy as np
 import affine
 import pandas as pd
+from rasterio.session import AWSSession
+
+# Get S3 bucket name from environment variable
+S3_BUCKET = os.getenv("S3_BUCKET", "hazard-processing-ma-tool-lambda-bucket")
+
+# Initialize S3 client
+s3_client = boto3.Session().client("s3")
+
+
+def read_raster_from_s3(s3_key):
+    """
+    Reads a raster file from S3 directly using Rasterio.
+    """
+    s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
+    with rasterio.Env(AWSSession(s3_client)):
+        return rasterio.open(s3_path)
 
 
 def compute_zonal_stat(data_value: np.ndarray, exp_affine: affine.Affine, 
@@ -29,6 +46,7 @@ def compute_hazard_population_exposure(admin_df: gpd.geodataframe.GeoDataFrame, 
     """
     Compute the population exposed to a hazard per administrative division.
     """
+    
 
     df = admin_df.drop(columns = 'geometry').copy()
     df['pop_exp'] = compute_zonal_stat(pop_exp_raster.read(1), pop_exp_raster.transform, admin_df, agg = 'sum')

@@ -3,12 +3,15 @@ import boto3
 import numpy as np
 import rioxarray as rio
 import xarray as xr
+import rasterio
+from rasterio.io import MemoryFile
 from rasterio.session import AWSSession
 
 S3_BUCKET = os.getenv("S3_BUCKET", "hazard-processing-ma-tool-lambda-bucket")
 
-# Create a boto3 session (instead of a client)
+# Create a boto3 session (instead of a client) and then create a client from it
 boto3_session = boto3.Session()
+s3_client = boto3_session.client("s3")
 
 HAZARD_THRESHOLD = {
     "flood": 0.0,
@@ -16,22 +19,31 @@ HAZARD_THRESHOLD = {
     "landslide": 2.5,
 }
 
+# def read_raster_from_s3(s3_key):
+#     """
+#     Reads a raster file directly from S3 into an xarray DataArray.
+#     """
+#     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
+#     with rio.Env(AWSSession(boto3_session)):
+#         return rio.open_rasterio(s3_path)
+
 def read_raster_from_s3(s3_key):
     """
     Reads a raster file directly from S3 into an xarray DataArray.
     """
     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-    with rio.Env(AWSSession(boto3_session)):
+    with rasterio.Env(AWSSession(boto3_session)):
         return rio.open_rasterio(s3_path)
+
 
 def write_raster_to_s3(raster, s3_key):
     """
     Writes a raster file to S3 directly.
     """
     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-    raster.rio.to_raster(s3_path)
+    with rasterio.Env(AWSSession(boto3_session)):
+        raster.rio.to_raster(s3_path)
     print(f"Saved {s3_key} to S3")
-
 
 def compute_hazard_mask(hazard_raster: xr.DataArray, population_raster: xr.DataArray, hazard_threshold: float) -> xr.DataArray:
     """
@@ -78,3 +90,6 @@ def lambda_handler(event, context):
         write_raster_to_s3(population_exposure_raster, output_path)
 
     return {"statusCode": 200, "body": "Hazard masks prepared and saved to S3"}
+
+if __name__ == "__main__":
+    lambda_handler({}, None)

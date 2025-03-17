@@ -5,11 +5,10 @@ import rioxarray as rio
 import xarray as xr
 from rasterio.session import AWSSession
 
-
 S3_BUCKET = os.getenv("S3_BUCKET", "hazard-processing-ma-tool-lambda-bucket")
 
-
-s3_client = boto3.Session().client("s3")
+# Create a boto3 session (instead of a client)
+boto3_session = boto3.Session()
 
 HAZARD_THRESHOLD = {
     "flood": 0.0,
@@ -17,15 +16,13 @@ HAZARD_THRESHOLD = {
     "landslide": 2.5,
 }
 
-
 def read_raster_from_s3(s3_key):
     """
     Reads a raster file directly from S3 into an xarray DataArray.
     """
     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-    with rio.open_rasterio(s3_path) as dataset:
-        return dataset
-
+    with rio.Env(AWSSession(boto3_session)):
+        return rio.open_rasterio(s3_path)
 
 def write_raster_to_s3(raster, s3_key):
     """

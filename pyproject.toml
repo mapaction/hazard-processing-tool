@@ -17,6 +17,7 @@ pandas = "^2.2.3"
 rioxarray = "^0.18.2"
 xarray = "^2025.1.2"
 boto3 = "^1.37.11"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

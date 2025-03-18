@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 import boto3
 import numpy as np
 import rioxarray as rio
@@ -9,8 +11,7 @@ from rasterio.session import AWSSession
 
 S3_BUCKET = os.getenv("S3_BUCKET", "hazard-processing-ma-tool-lambda-bucket")
 
-# Create a boto3 session (instead of a client) and then create a client from it
-boto3_session = boto3.Session()
+boto3_session = boto3.Session(region_name=os.environ.get("AWS_DEFAULT_REGION"))
 s3_client = boto3_session.client("s3")
 
 HAZARD_THRESHOLD = {
@@ -19,31 +20,53 @@ HAZARD_THRESHOLD = {
     "landslide": 2.5,
 }
 
-# def read_raster_from_s3(s3_key):
-#     """
-#     Reads a raster file directly from S3 into an xarray DataArray.
-#     """
-#     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-#     with rio.Env(AWSSession(boto3_session)):
-#         return rio.open_rasterio(s3_path)
-
 def read_raster_from_s3(s3_key):
     """
     Reads a raster file directly from S3 into an xarray DataArray.
     """
     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
+    print(f"Reading raster from {s3_path}")
     with rasterio.Env(AWSSession(boto3_session)):
         return rio.open_rasterio(s3_path)
 
 
+# def write_raster_to_s3(raster, s3_key):
+#     """
+#     Writes a raster file to S3 directly.
+#     """
+#     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
+#     print(f"Writing raster to {s3_path}")
+#     with rasterio.Env(AWSSession(boto3_session)):
+#         raster.rio.to_raster(s3_path)
+#     print(f"Saved {s3_key} to S3")
 def write_raster_to_s3(raster, s3_key):
     """
-    Writes a raster file to S3 directly.
+    Writes a raster to a MemoryFile and uploads it to S3 using boto3.
     """
-    s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-    with rasterio.Env(AWSSession(boto3_session)):
-        raster.rio.to_raster(s3_path)
+    print(f"Writing raster to memory...")
+
+    # Get raster metadata correctly from rioxarray
+    raster_meta = {
+        "driver": "GTiff",
+        "dtype": str(raster.dtype),
+        "nodata": raster.rio.nodata,
+        "count": 1,
+        "width": raster.rio.width,
+        "height": raster.rio.height,
+        "crs": raster.rio.crs,
+        "transform": raster.rio.transform(),
+    }
+
+    with MemoryFile() as memfile:
+        with memfile.open(**raster_meta) as dataset:
+            dataset.write(raster.values[0], 1)  # Write the first band
+
+        # Upload MemoryFile data to S3
+        print(f"Uploading {s3_key} to S3")
+        s3_client.put_object(Bucket=S3_BUCKET, Key=s3_key, Body=memfile.read())
+
     print(f"Saved {s3_key} to S3")
+
 
 def compute_hazard_mask(hazard_raster: xr.DataArray, population_raster: xr.DataArray, hazard_threshold: float) -> xr.DataArray:
     """

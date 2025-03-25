@@ -1,6 +1,4 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
 import boto3
 import numpy as np
 import rioxarray as rio
@@ -8,9 +6,11 @@ import xarray as xr
 import rasterio
 from rasterio.io import MemoryFile
 from rasterio.session import AWSSession
+from dotenv import load_dotenv
+
+load_dotenv()
 
 S3_BUCKET = os.getenv("S3_BUCKET", "hazard-processing-ma-tool-lambda-bucket")
-
 boto3_session = boto3.Session(region_name=os.environ.get("AWS_DEFAULT_REGION"))
 s3_client = boto3_session.client("s3")
 
@@ -29,23 +29,12 @@ def read_raster_from_s3(s3_key):
     with rasterio.Env(AWSSession(boto3_session)):
         return rio.open_rasterio(s3_path)
 
-
-# def write_raster_to_s3(raster, s3_key):
-#     """
-#     Writes a raster file to S3 directly.
-#     """
-#     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-#     print(f"Writing raster to {s3_path}")
-#     with rasterio.Env(AWSSession(boto3_session)):
-#         raster.rio.to_raster(s3_path)
-#     print(f"Saved {s3_key} to S3")
 def write_raster_to_s3(raster, s3_key):
     """
     Writes a raster to a MemoryFile and uploads it to S3 using boto3.
     """
     print(f"Writing raster to memory...")
 
-    # Get raster metadata correctly from rioxarray
     raster_meta = {
         "driver": "GTiff",
         "dtype": str(raster.dtype),
@@ -61,11 +50,8 @@ def write_raster_to_s3(raster, s3_key):
         with memfile.open(**raster_meta) as dataset:
             dataset.write(raster.values[0], 1)  # Write the first band
 
-        # Upload MemoryFile data to S3
         print(f"Uploading {s3_key} to S3")
         s3_client.put_object(Bucket=S3_BUCKET, Key=s3_key, Body=memfile.read())
-
-    print(f"Saved {s3_key} to S3")
 
 
 def compute_hazard_mask(hazard_raster: xr.DataArray, population_raster: xr.DataArray, hazard_threshold: float) -> xr.DataArray:
@@ -97,7 +83,7 @@ def compute_population_exposure(hazard_mask_raster: xr.DataArray, population_ras
     return pop_exp_raster
 
 
-def lambda_handler(event, context):
+def main(event, context):
     """
     AWS Lambda entry point for hazard mask computation.
     """
@@ -115,4 +101,4 @@ def lambda_handler(event, context):
     return {"statusCode": 200, "body": "Hazard masks prepared and saved to S3"}
 
 if __name__ == "__main__":
-    lambda_handler({}, None)
+    main({}, None)

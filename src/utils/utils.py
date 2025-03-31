@@ -4,15 +4,16 @@ import numpy as np
 import geopandas as gpd
 from rasterstats import zonal_stats
 from affine import Affine
-from typing import List
-from typing import Dict
+from typing import List, Dict
 import pandas as pd
 import rasterio
-from .constants import ( HAZARD_RASTER_PATH, 
-                        POPULATION_RASTER_PATH, 
-                        HAZARD_THRESHOLD,
-                        HAZARD_OUTPUT_PATH
-                        )
+from .constants import (
+    S3_BUCKET,
+    HAZARD_RASTER_PATH, 
+    POPULATION_RASTER_PATH, 
+    HAZARD_THRESHOLD,
+    HAZARD_OUTPUT_PATH  # You may no longer need this here if export_dataset moves to s3.py
+)
 
 def compute_hazard_mask(hazard_raster: xr.DataArray, 
                         population_raster: xr.DataArray, 
@@ -50,8 +51,10 @@ def prep_data()-> Dict[str, xr.DataArray]:
     """
     prep_exposures = {}
     for hazard in HAZARD_RASTER_PATH:
-        hazard_raster = xr.open_dataarray(HAZARD_RASTER_PATH[hazard])
-        population_raster = xr.open_dataarray(POPULATION_RASTER_PATH)
+        hazard_raster_path = f"/vsis3/{S3_BUCKET}/{HAZARD_RASTER_PATH[hazard]}"
+        pop_raster_path = f"/vsis3/{S3_BUCKET}/{POPULATION_RASTER_PATH}"
+        hazard_raster = xr.open_dataarray(hazard_raster_path)
+        population_raster = xr.open_dataarray(pop_raster_path)
         hazard_mask_raster = compute_hazard_mask(hazard_raster, population_raster, HAZARD_THRESHOLD[hazard])
         population_exposure_raster = compute_population_exposure(hazard_mask_raster, population_raster)
         prep_exposures[hazard] = population_exposure_raster
@@ -91,26 +94,14 @@ def compute_binary_zonal_stat(raster_path: str,
                               admin_df: gpd.GeoDataFrame, 
                               threshold: float=0
                               ) -> List[float]:
-    """"
-    Compute zonal statistics for binary de/re data"
     """
-    with rasterio.open(raster_path) as src:
+    Compute zonal statistics for binary data.
+    Reads the raster from S3 using the VSI interface.
+    """
+    # Build full S3 path for the raster
+    full_raster_path = f"/vsis3/{S3_BUCKET}/{raster_path}"
+    with rasterio.open(full_raster_path) as src:
         data = np.nan_to_num(src.read(1))
         data[data <= threshold] = 0
         data[data > threshold] = 1
         return compute_zonal_stat(data, src.transform, admin_df, agg='sum')
-
-def export_dataset(df: gpd.GeoDataFrame, 
-                   hazard: str
-                   )-> None:
-    """
-    Export the dataset to a csv file"
-    """
-    
-    if 'adm2_src' in  df.columns:
-        df.sort_values(by =['adm1_src', 'adm2_src'], inplace = True) 
-
-    df.to_csv(HAZARD_OUTPUT_PATH[hazard])
-    print(HAZARD_OUTPUT_PATH[hazard])
-
-    return None

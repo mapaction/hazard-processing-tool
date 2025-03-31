@@ -29,7 +29,7 @@ paths:
 	@poetry run python -m src.utils.setup_paths
 	@echo "Paths created successfully"
 
-app: paths
+app:
 	@echo "Running app.."
 	@poetry run python -m src.main.__main__
 	@echo "Hazard App run successfully"

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-parent_dir = Path.cwd().parent
+parent_dir = Path.cwd()
 
 POPULATION_RASTER_PATH = parent_dir / './pop_data/sadc_pop_1km.tif'
 

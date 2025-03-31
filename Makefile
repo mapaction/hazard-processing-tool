@@ -24,6 +24,10 @@ clean:
 	@rm -rf .venv
 	@poetry env remove --all
 
+paths:
+	@echo "Creating paths.."
+	@poetry run python -m src.utils.setup_paths
+	@echo "Paths created successfully"
 
 help:
 	@echo "Available make targets:"

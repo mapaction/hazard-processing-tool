@@ -29,6 +29,10 @@ paths:
 	@poetry run python -m src.utils.setup_paths
 	@echo "Paths created successfully"
 
+app: paths
+	@echo "Running app.."
+	@poetry run python -m src.main.__main__
+	@echo "Hazard App run successfully"
 help:
 	@echo "Available make targets:"
 	@echo " make help           - Print help"

@@ -1,4 +1,13 @@
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv(dotenv_path=os.path.expanduser('~/.hazard_tool_rc'))
+
+S3_BUCKET = os.getenv('S3_BUCKET')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION')
 
 parent_dir = Path.cwd()
 

@@ -1,12 +1,16 @@
 import os
+import boto3
 import geopandas as gpd
 import pandas as pd
 import numpy as np
 import rasterio
 from rasterstats import zonal_stats
-from src.utils.raster_aux_tools import read_raster_from_s3, compute_zonal_stat, compute_hazard_population_exposure
+from src.utils.raster_aux_tools import ( read_raster_from_s3, 
+                                        compute_zonal_stat, 
+                                        compute_hazard_population_exposure
+)
 from dotenv import load_dotenv
-import boto3
+
 
 # Load environment variables from .env file
 load_dotenv()

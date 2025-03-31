@@ -4,6 +4,7 @@ import numpy as np
 import rioxarray as rio
 import xarray as xr
 import rasterio
+from src.utils.raster_aux_tools import read_raster_from_s3
 from rasterio.io import MemoryFile
 from rasterio.session import AWSSession
 from dotenv import load_dotenv
@@ -11,6 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 S3_BUCKET = os.getenv("S3_BUCKET", "hazard-processing-ma-tool-lambda-bucket")
+
 boto3_session = boto3.Session(region_name=os.environ.get("AWS_DEFAULT_REGION"))
 s3_client = boto3_session.client("s3")
 

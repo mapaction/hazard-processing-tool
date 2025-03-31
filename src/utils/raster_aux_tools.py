@@ -28,6 +28,17 @@ def read_raster_from_s3(s3_key):
     with rasterio.Env(AWSSession(boto3_session)):
         return rasterio.open(s3_path)
 
+# def read_raster_from_s3(s3_key, as_xarray=True, **kwargs):
+#     """
+#     Reads a raster file from S3 directly using Rasterio.
+#     """
+#     s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
+#     with rasterio.Env(AWSSession(boto3_session)):
+#         if as_xarray:
+#             return open_rasterio(s3_path, **kwargs)
+#         else:
+#             return rasterio.open(s3_path, **kwargs)
+
 
 def compute_zonal_stat(data_value: np.ndarray, exp_affine: affine.Affine, 
     admin_df: gpd.geodataframe.GeoDataFrame, agg: str) -> list:

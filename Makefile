@@ -24,17 +24,15 @@ clean:
 	@rm -rf .venv
 	@poetry env remove --all
 
-mask:
-	@echo "Running mask.."
-	@poetry run python -m src.main.prepare_hazard_mask
+paths:
+	@echo "Creating paths.."
+	@poetry run python -m src.utils.setup_paths
+	@echo "Paths created successfully"
 
-compute:
-	@echo "Running compute.."
-	@poetry run python -m src.main.compute_hazard
-
-pipeline:	mask compute
-
-
+app:
+	@echo "Running app.."
+	@poetry run python -m src.main.__main__
+	@echo "Hazard App run successfully"
 
 help:
 	@echo "Available make targets:"

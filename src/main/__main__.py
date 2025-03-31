@@ -8,10 +8,10 @@ from src.utils.utils import prep_data
 from src.utils.s3 import export_dataset  # Updated: export_dataset is now in s3.py
 from src.utils.constants import (
     ADMIN_VECTOR_PATH, 
-    POPULATION_RASTER_PATH, 
-    HAZARD_OUTPUT_PATH,
+    POPULATION_RASTER_PATH,
     S3_BUCKET
 )
+from src.utils.constants import S3_BUCKET, ADMIN_VECTOR_PATH
 import geopandas as gpd
 import xarray as xr
 
@@ -36,7 +36,6 @@ def load_admin_data():
     Reads the admin vector data from S3 using the VSI path.
     Note: This requires that your GDAL/Fiona installation supports the /vsis3/ interface.
     """
-    from src.utils.constants import S3_BUCKET, ADMIN_VECTOR_PATH
     admin_path = f"/vsis3/{S3_BUCKET}/{ADMIN_VECTOR_PATH}"
     admin_df = gpd.read_file(admin_path)
     adm_complete_list = ['adm0_src', 'adm0_name', 'adm1_src', 'adm1_name', 'adm2_src', 'adm2_name']

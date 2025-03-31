@@ -11,8 +11,7 @@ from .constants import (
     S3_BUCKET,
     HAZARD_RASTER_PATH, 
     POPULATION_RASTER_PATH, 
-    HAZARD_THRESHOLD,
-    HAZARD_OUTPUT_PATH  # You may no longer need this here if export_dataset moves to s3.py
+    HAZARD_THRESHOLD
 )
 
 def compute_hazard_mask(hazard_raster: xr.DataArray, 

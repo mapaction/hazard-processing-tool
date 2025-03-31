@@ -33,6 +33,7 @@ app:
 	@echo "Running app.."
 	@poetry run python -m src.main.__main__
 	@echo "Hazard App run successfully"
+
 help:
 	@echo "Available make targets:"
 	@echo " make help           - Print help"

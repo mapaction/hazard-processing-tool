@@ -1,9 +1,6 @@
 import geopandas as gpd
 import xarray as xr
-import numpy as np
 import pandas as pd
-from typing import List
-from typing import Dict
 from src.utils.constants import ( HAZARD_INPUT_PATH, S3_BUCKET )
 from src.utils.utils import ( 
     compute_hazard_population_exposure,

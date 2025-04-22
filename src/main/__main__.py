@@ -7,9 +7,7 @@ from .hazards import (
 from src.utils.utils import prep_data
 from src.utils.s3 import export_dataset  # Updated: export_dataset is now in s3.py
 from src.utils.constants import (
-    ADMIN_VECTOR_PATH, 
     POPULATION_RASTER_PATH, 
-    HAZARD_OUTPUT_PATH,
     S3_BUCKET
 )
 import geopandas as gpd
@@ -53,15 +51,15 @@ def process_and_export_hazards(admin_df, pop_raster, exposures):
 def process_and_export_specific_hazards(admin_df):
     df_deforestation = process_deforestation(admin_df)
     export_dataset(df_deforestation, 'deforestation')
-    print(f'Finished processing deforestation')
+    print('Finished processing deforestation')
 
     df_cyclone = process_cyclone(admin_df)
     export_dataset(df_cyclone, 'cyclone')
-    print(f'Finished processing cyclone')
+    print('Finished processing cyclone')
 
     df_coastal_erosion = coastal_erosion(admin_df)
     export_dataset(df_coastal_erosion, 'coastal_erosion')
-    print(f'Finished processing coastal erosion')
+    print('Finished processing coastal erosion')
 
 if __name__ == "__main__":
     main()

@@ -8,12 +8,7 @@ import xarray as xr
 from affine import Affine
 from rasterstats import zonal_stats
 
-from .constants import (
-    HAZARD_RASTER_PATH,
-    HAZARD_THRESHOLD,
-    POPULATION_RASTER_PATH,
-    S3_BUCKET,
-)
+from .constants import HAZARD_RASTER_PATH, HAZARD_THRESHOLD, POPULATION_RASTER_PATH
 
 
 def compute_hazard_mask(
@@ -55,8 +50,8 @@ def prep_data() -> Dict[str, xr.DataArray]:
     """
     prep_exposures = {}
     for hazard in HAZARD_RASTER_PATH:
-        hazard_raster_path = f"/vsis3/{S3_BUCKET}/{HAZARD_RASTER_PATH[hazard]}"
-        pop_raster_path = f"/vsis3/{S3_BUCKET}/{POPULATION_RASTER_PATH}"
+        hazard_raster_path = HAZARD_RASTER_PATH[hazard]
+        pop_raster_path = POPULATION_RASTER_PATH
         hazard_raster = xr.open_dataarray(hazard_raster_path)
         population_raster = xr.open_dataarray(pop_raster_path)
         hazard_mask_raster = compute_hazard_mask(
@@ -114,7 +109,7 @@ def compute_binary_zonal_stat(
     Reads the raster from S3 using the VSI interface.
     """
     # Build full S3 path for the raster
-    full_raster_path = f"/vsis3/{S3_BUCKET}/{raster_path}"
+    full_raster_path = raster_path
     with rasterio.open(full_raster_path) as src:
         data = np.nan_to_num(src.read(1))
         data[data <= threshold] = 0

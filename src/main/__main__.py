@@ -1,7 +1,7 @@
 import geopandas as gpd
 import xarray as xr
 
-from src.utils.constants import POPULATION_RASTER_PATH, S3_BUCKET
+from src.utils.constants import ADMIN_VECTOR_PATH, POPULATION_RASTER_PATH
 from src.utils.s3 import export_dataset
 from src.utils.utils import prep_data
 
@@ -20,7 +20,7 @@ def main():
     admin_df = load_admin_data()
 
     # 2) Open the population raster from S3 using the VSI interface
-    pop_raster_path = f"/vsis3/{S3_BUCKET}/{POPULATION_RASTER_PATH}"
+    pop_raster_path = POPULATION_RASTER_PATH
     pop_raster = xr.open_dataarray(pop_raster_path)
 
     # Process hazards
@@ -34,9 +34,8 @@ def load_admin_data():
     """
     Reads the admin vector data from S3 using the VSI path.
     """
-    from src.utils.constants import ADMIN_VECTOR_PATH, S3_BUCKET
 
-    admin_path = f"/vsis3/{S3_BUCKET}/{ADMIN_VECTOR_PATH}"
+    admin_path = ADMIN_VECTOR_PATH
     admin_df = gpd.read_file(admin_path)
     adm_complete_list = [
         "adm0_src",

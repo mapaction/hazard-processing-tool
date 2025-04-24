@@ -26,16 +26,18 @@ HAZARD_THRESHOLD = {
     "deforestation": 0.0,
 }
 
-ADMIN_VECTOR_PATH = "admin_data/sadc_adm1.geojson"
+ADMIN_VECTOR_PATH = CLOUD_PATH + "admin_data/sadc_adm1.geojson"
 
 HAZARD_INPUT_PATH = {
     "cyclone": (
-        "hazard_data/cyclone/STORM_FIXED_RETURN_PERIODS_SI_100_YR_RP.tif"
-    ),  # noqa: E501
-    "coastal_erosion": "hazard_data/coastal_erosion/sadc_coastal_erosion.shp",
+        CLOUD_PATH
+        + "hazard_data/cyclone/STORM_FIXED_RETURN_PERIODS_SI_100_YR_RP.tif"  # noqa: E501
+    ),
+    "coastal_erosion": CLOUD_PATH
+    + "hazard_data/coastal_erosion/sadc_coastal_erosion.shp",
     "deforestation": {
-        "loss": "hazard_data/deforestation/sadc_lossyear.tif",
-        "cover": "hazard_data/deforestation/sadc_treecover.tif",
+        "loss": CLOUD_PATH + "hazard_data/deforestation/sadc_lossyear.tif",
+        "cover": CLOUD_PATH + "hazard_data/deforestation/sadc_treecover.tif",
     },
 }
 

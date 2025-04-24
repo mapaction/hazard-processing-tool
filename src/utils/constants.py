@@ -9,7 +9,9 @@ AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
 
-POPULATION_RASTER_PATH = "pop_data/sadc_pop_1km.tif"
+CLOUD_PATH = f"/vsis3/{S3_BUCKET}/"
+
+POPULATION_RASTER_PATH = CLOUD_PATH + "pop_data/sadc_pop_1km.tif"
 
 HAZARD_RASTER_PATH = {
     "flood": "hazard_data/flood/sadc_flood.tif",

@@ -1,7 +1,5 @@
 import boto3
 import pandas as pd
-import rasterio
-from rasterio.session import AWSSession
 
 from .constants import (
     AWS_ACCESS_KEY_ID,
@@ -18,15 +16,6 @@ boto3_session = boto3.Session(
 )
 
 s3_client = boto3_session.client("s3")
-
-
-def read_raster_from_s3(s3_key):
-    """
-    Reads a raster file from S3 directly using Rasterio.
-    """
-    s3_path = f"/vsis3/{S3_BUCKET}/{s3_key}"
-    with rasterio.Env(AWSSession(boto3_session)):
-        return rasterio.open(s3_path)
 
 
 def export_dataset(df: pd.DataFrame, hazard: str) -> None:

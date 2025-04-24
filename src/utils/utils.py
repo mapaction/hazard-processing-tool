@@ -55,7 +55,7 @@ def prep_data() -> Dict[str, xr.DataArray]:
     """
     prep_exposures = {}
     for hazard in HAZARD_RASTER_PATH:
-        hazard_raster_path = f"/vsis3/{S3_BUCKET}/{HAZARD_RASTER_PATH[hazard]}"
+        hazard_raster_path = HAZARD_RASTER_PATH[hazard]
         pop_raster_path = POPULATION_RASTER_PATH
         hazard_raster = xr.open_dataarray(hazard_raster_path)
         population_raster = xr.open_dataarray(pop_raster_path)

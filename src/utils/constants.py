@@ -14,9 +14,9 @@ CLOUD_PATH = f"/vsis3/{S3_BUCKET}/"
 POPULATION_RASTER_PATH = CLOUD_PATH + "pop_data/sadc_pop_1km.tif"
 
 HAZARD_RASTER_PATH = {
-    "flood": "hazard_data/flood/sadc_flood.tif",
-    "earthquake": "hazard_data/earthquake/sadc_earthquake.tif",
-    "landslide": "hazard_data/landslide/sadc_landslide.tif",
+    "flood": CLOUD_PATH + "hazard_data/flood/sadc_flood.tif",
+    "earthquake": CLOUD_PATH + "hazard_data/earthquake/sadc_earthquake.tif",
+    "landslide": CLOUD_PATH + "hazard_data/landslide/sadc_landslide.tif",
 }
 
 HAZARD_THRESHOLD = {

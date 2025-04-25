@@ -50,19 +50,26 @@ def process_cyclone(admin_df: gpd.GeoDataFrame) -> pd.DataFrame:
 
 
 def coastal_erosion(admin_df: gpd.GeoDataFrame) -> pd.DataFrame:
-    """ "
-    Process coastal erosion data"
     """
+    Process coastal erosion by applying a 1 km buffer on admin boundaries,
+    aggregating hazard ‘rate_time’ back onto the original admin IDs.
+    """
+    metric_crs = admin_df.estimate_utm_crs()
+    admin_metric = admin_df.to_crs(metric_crs).copy()
+    admin_metric["geometry"] = admin_metric.geometry.buffer(1000)  # 1 000 m
+    hazard_path = HAZARD_INPUT_PATH["coastal_erosion"]
+    hazard = gpd.read_file(hazard_path).to_crs(metric_crs)[["rate_time", "geometry"]]
     adm_col = next(
-        col
-        for col in ["adm2_src", "adm1_src", "adm0_src"]
-        if col in admin_df.columns  # noqa: E501
+        col for col in ("adm2_src", "adm1_src", "adm0_src") if col in admin_df.columns
     )
-    hazard_df = gpd.read_file(HAZARD_INPUT_PATH["coastal_erosion"])
-    admin_df.geometry = admin_df.geometry.buffer(0.01)
-    hazard_df = hazard_df[["rate_time", "geometry"]]
-    merge_df = gpd.sjoin(admin_df, hazard_df)
-    merge_df = merge_df.groupby([adm_col])["rate_time"].mean().reset_index()
-    df = admin_df.merge(merge_df, on=adm_col, how="left")
-    df = df.drop(columns="geometry")
-    return df
+    joined = gpd.sjoin(
+        admin_metric, hazard, how="left", predicate="intersects", rsuffix="_hz"
+    )
+    stats = (
+        joined.groupby(adm_col)["rate_time"]
+        .mean()
+        .reset_index()
+        .rename(columns={"rate_time": "mean_rate_time"})
+    )
+    result = admin_df.drop(columns="geometry").merge(stats, on=adm_col, how="left")
+    return result

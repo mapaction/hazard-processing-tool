@@ -68,9 +68,9 @@ def compute_zonal_stat(
     data_value: np.ndarray,
     exp_affine: Affine,
     admin_df: gpd.GeoDataFrame,
-    agg: str,  # noqa: E501
+    agg: str,
 ) -> List[float]:
-    """ ""
+    """
     Compute zonal statistics for raster/pop the exposure data"
     """
     stats = zonal_stats(admin_df, data_value, affine=exp_affine, stats=agg, nodata=-999)
@@ -81,9 +81,11 @@ def compute_zonal_stat(
 def compute_hazard_population_exposure(
     admin_df: gpd.GeoDataFrame,
     pop_raster: xr.DataArray,
-    pop_exp_raster: xr.DataArray,  # noqa: E501
+    pop_exp_raster: xr.DataArray,
 ) -> pd.DataFrame:
-
+    """
+    Compute population exposure from hazard mask and population raster
+    """
     pop_arr = pop_raster[0].values
     pop_affine = pop_raster.rio.transform()
 

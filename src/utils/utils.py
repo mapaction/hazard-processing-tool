@@ -73,7 +73,7 @@ def compute_zonal_stat(
     """ ""
     Compute zonal statistics for raster/pop the exposure data"
     """
-    stats = zonal_stats(admin_df, data_value, affine=exp_affine, stats=agg)
+    stats = zonal_stats(admin_df, data_value, affine=exp_affine, stats=agg, nodata=-999)
     value_list = [x[agg] for x in stats]
     return value_list
 

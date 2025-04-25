@@ -36,7 +36,7 @@ aws_etl:
 
 local_etl:
 	@echo "Running in LOCAL mode (no S3)..."
-	USE_LOCAL=true poetry run python -m src.main.__main__
+	@USE_LOCAL=true poetry run python -m src.main.__main__
 	@echo "Hazard App run successfully"
 
 

@@ -30,14 +30,9 @@ make hooks      # Install pre-commit hooks
 ```bash
 make paths     # Setup paths
 make aws_etl   # Run the hazard processing pipeline
+make local_etl # Run the hazard processing pipeline locally without S3
 make test      # Run unit tests
 make lint      # Run lint checks
-```
-
-Or directly with Poetry:
-
-```bash
-poetry run python -m src.main.__main__
 ```
 
 ## Configuration
@@ -50,6 +45,7 @@ export S3_BUCKET=<your-s3-bucket>
 export AWS_ACCESS_KEY_ID=<your-aws-access-key-id>
 export AWS_SECRET_ACCESS_KEY=<your-aws-secret-access-key>
 export AWS_DEFAULT_REGION=<your-aws-default-region>
+export USE_LOCAL=true
 ```
 
 Optionally, adjust path constants (e.g., `ADMIN_VECTOR_PATH`, `POPULATION_RASTER_PATH`)

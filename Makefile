@@ -39,6 +39,9 @@ local_etl:
 	@USE_LOCAL=true poetry run python -m src.main.__main__
 	@echo "Hazard App run successfully"
 
+app:
+	@echo "Running Streamlit app..."
+	@PYTHONPATH=. poetry run streamlit run src/main/app.py
 
 help:
 	@echo "Available make targets:"

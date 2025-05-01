@@ -3,12 +3,27 @@
 A CLI tool to process hazard data (flood, earthquake,
 landslide, deforestation, cyclone, coastal erosion) and export results to AWS S3.
 
+## Poetry Usage
+
+Install Poetry (if not already installed):
+
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+
+Project installation:
+
+```bash
+poetry --version
+```
+
 ## Features
 
 - Prepare exposure data from various sources
 - Process multiple hazards with xarray and geopandas
 - Export processed datasets to S3 using the VSI interface
 - Configurable via `src/utils/constants.py`
+- Interactive web app UI via Streamlit
 
 ## Requirements
 
@@ -33,6 +48,7 @@ make aws_etl   # Run the hazard processing pipeline
 make local_etl # Run the hazard processing pipeline locally without S3
 make test      # Run unit tests
 make lint      # Run lint checks
+make app      # Run the interactive Streamlit application
 ```
 
 ## Configuration

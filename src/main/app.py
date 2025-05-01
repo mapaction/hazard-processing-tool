@@ -101,6 +101,16 @@ with tabs[0]:
         st.session_state["result_df"] = df
         st.dataframe(df, use_container_width=True)
 
+        # Save the result
+        output_path = constants.HAZARD_OUTPUT_PATH[hazard_choice]
+        if use_local:
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            df.to_csv(output_path, index=False)
+        else:
+            # Still save locally even if tick was to S3
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            df.to_csv(output_path, index=False)
+
     if "result_df" in st.session_state:
         csv_data = st.session_state["result_df"].to_csv(index=False).encode("utf-8")
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")

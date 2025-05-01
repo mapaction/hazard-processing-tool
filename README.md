@@ -11,22 +11,10 @@ Install Poetry (if not already installed):
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-Install project dependencies:
+Project installation:
 
 ```bash
-poetry install
-```
-
-Activate the Poetry virtual environment:
-
-```bash
-poetry shell
-```
-
-Run commands inside Poetry:
-
-```bash
-poetry run make <target>
+poetry --version
 ```
 
 ## Features

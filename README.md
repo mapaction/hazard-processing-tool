@@ -43,7 +43,6 @@ make hooks      # Install pre-commit hooks
 ## Usage
 
 ```bash
-make paths     # Setup paths
 make aws_etl   # Run the hazard processing pipeline
 make local_etl # Run the hazard processing pipeline locally without S3
 make test      # Run unit tests

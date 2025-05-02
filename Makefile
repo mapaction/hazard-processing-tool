@@ -24,11 +24,6 @@ clean:
 	@rm -rf .venv
 	@poetry env remove --all
 
-paths:
-	@echo "Creating paths.."
-	@poetry run python -m src.utils.setup_paths
-	@echo "Paths created successfully"
-
 aws_etl:
 	@echo "Running app.."
 	@poetry run python -m src.main.__main__

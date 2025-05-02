@@ -37,7 +37,7 @@ poetry --version
 
 ```bash
 git clone <repository_url>
-cd hazard-processing-tool-aws
+cd hazard-processing-tool
 make .venv      # Install dependencies
 make hooks      # Install pre-commit hooks
 ```

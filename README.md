@@ -1,7 +1,8 @@
 # Hazard Processing Tool AWS
 
 A CLI tool to process hazard data (flood, earthquake,
-landslide, deforestation, cyclone, coastal erosion) and export results to AWS S3.
+landslide, deforestation, cyclone, coastal erosion)
+and export results to AWS S3 or locally.
 
 ## Poetry Usage
 
@@ -22,6 +23,7 @@ poetry --version
 - Prepare exposure data from various sources
 - Process multiple hazards with xarray and geopandas
 - Export processed datasets to S3 using the VSI interface
+- Export local
 - Configurable via `src/utils/constants.py`
 - Interactive web app UI via Streamlit
 

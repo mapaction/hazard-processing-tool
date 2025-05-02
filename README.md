@@ -36,7 +36,7 @@ poetry --version
 ## Installation
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/mapaction/hazard-processing-tool.git
 cd hazard-processing-tool
 make .venv      # Install dependencies
 make hooks      # Install pre-commit hooks

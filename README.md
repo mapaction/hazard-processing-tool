@@ -42,16 +42,6 @@ make .venv      # Install dependencies
 make hooks      # Install pre-commit hooks
 ```
 
-## Usage
-
-```bash
-make aws_etl   # Run the hazard processing pipeline
-make local_etl # Run the hazard processing pipeline locally without S3
-make test      # Run unit tests
-make lint      # Run lint checks
-make app      # Run the interactive Streamlit application
-```
-
 ## Configuration
 
 Create a `~/.hazard_tool_rc` file in your home directory
@@ -61,12 +51,22 @@ with the following environment variables:
 export S3_BUCKET=<your-s3-bucket>
 export AWS_ACCESS_KEY_ID=<your-aws-access-key-id>
 export AWS_SECRET_ACCESS_KEY=<your-aws-secret-access-key>
-export AWS_DEFAULT_REGION=<your-aws-default-region>
+export AWS_DEFAULT_REGION=eu-west-2
 export USE_LOCAL=true
 ```
 
 Optionally, adjust path constants (e.g., `ADMIN_VECTOR_PATH`, `POPULATION_RASTER_PATH`)
 directly in `src/utils/constants.py` if needed.
+
+## Usage
+
+```bash
+make aws_etl   # Run the hazard processing pipeline
+make local_etl # Run the hazard processing pipeline locally without S3
+make test      # Run unit tests
+make lint      # Run lint checks
+make app      # Run the interactive Streamlit application
+```
 
 ## Project Structure
 

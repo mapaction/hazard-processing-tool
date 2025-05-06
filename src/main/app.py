@@ -63,6 +63,43 @@ def _handle_run_full():
 if st.sidebar.button("Run Full Pipeline"):
     _handle_run_full()
 
+sadc_member_countries = [
+    "Angola",
+    "Botswana",
+    "Comoros",
+    "Democratic Republic of the Congo",
+    "Eswatini",
+    "Lesotho",
+    "Madagascar",
+    "Malawi",
+    "Mauritius",
+    "Mozambique",
+    "Namibia",
+    "Seychelles",
+    "South Africa",
+    "Tanzania",
+    "Zambia",
+    "Zimbabwe",
+]
+
+st.sidebar.selectbox("Select SADC Member Country (Dummy Button)", sadc_member_countries)
+
+subnational_admin_boundaries = [
+    "Admin 1",
+    "Admin 2",
+    "Admin 3",
+    "Admin 4",
+]
+
+st.sidebar.selectbox(
+    "Select Subnational Admin Boundary (Dummy Button)", subnational_admin_boundaries
+)
+populations_options = [
+    "WorldPop",
+    "GHS",
+]
+st.sidebar.selectbox("Select Population Dataset (Dummy Button)", populations_options)
+
 hazard_options = [
     "flood",
     "earthquake",

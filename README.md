@@ -12,6 +12,10 @@ Install Poetry (if not already installed):
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
+if necessary, add poetry location to `PATH`
+
+[Install Poetry](docs/hazard-tool-wsl-setup.md#3-install-poetry)
+
 Project installation:
 
 ```bash
